@@ -1,16 +1,40 @@
-import express from 'express';
+// import express from 'express';
+// import http from 'http'
+import {Server} from "socket.io";
+import { createServer } from "http";
 
-const app =express();
+const httpServer = createServer();
 
-var cors = require('cors');
+// const app =express();
+// const server = http.createServer(app);
 
-const PORT = 5000;
+// var cors = require('cors');
 
-app.use(cors());
+// const PORT = 5000;
 
-app.use(express.json());
+// app.use(cors());
 
+// app.use(express.json());
 
-app.listen(PORT ,()=>{
-    console.log(`App is listening on ${PORT}`)
+// app.use(express.static('/public'))
+
+const io = new Server(httpServer,{
+    cors:{origin:'*'}
+    
+});
+
+io.on("connection",(socket)=>{
+    socket.emit("welcome","welcomme to the channel");
+
+    socket.on("msg",(data)=>{
+        console.log("message from client",data);
+    })
 })
+
+httpServer.listen(3001,()=>{
+    console.log(`Listening on port 3001`)
+})
+
+// app.listen(PORT ,()=>{
+//     console.log(`App is listening on ${PORT}`)
+// })

@@ -1,4 +1,23 @@
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:3001");
+
 function App() {
+  useEffect(() => {
+    socket.on("connect", () => {
+      socket.on("welcome", (data) => {
+        console.log("this is the message from server", data);
+      });
+
+      socket.emit("msg", "Thanks for connecting");
+    });
+
+    return () => {
+      socket.off("connect");
+    };
+  }, []);
+
   return (
     <div className="bg-gray-500 w-screen h-screen flex justify-center items-center  ">
       <form className="w-1/4 h-1/4 bg-white rounded-xl p-5 ">
